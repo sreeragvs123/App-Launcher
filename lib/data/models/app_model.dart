@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+
 class AppModel {
   final String name;
   final String packageName;
@@ -10,4 +11,6 @@ class AppModel {
     required this.packageName,
     this.iconBytes,
   });
+  
+
 }
