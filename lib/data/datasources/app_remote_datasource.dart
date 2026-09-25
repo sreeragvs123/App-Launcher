@@ -1,4 +1,5 @@
-import 'package:device_apps/device_apps.dart';
+import 'package:installed_apps/installed_apps.dart';
+import 'package:installed_apps/app_info.dart';
 import '../models/app_model.dart';
 
 abstract class AppLocalDataSource {
@@ -9,15 +10,14 @@ abstract class AppLocalDataSource {
 class AppLocalDataSourceImpl implements AppLocalDataSource {
   @override
   Future<List<AppModel>> getInstalledApps() async {
-    List<Application> apps = await DeviceApps.getInstalledApplications(
-      includeAppIcons: true,
-      includeSystemApps: true,
-      onlyAppsWithLaunchIntent: true,
+    List<AppInfo> apps = await InstalledApps.getInstalledApps(
+      excludeSystemApps: false, // Set to false to include system apps
+      withIcon: true,          // Set to true to fetch app icons
     );
 
-    return apps.whereType<ApplicationWithIcon>().map((app) {
+    return apps.map((app) {
       return AppModel(
-        name: app.appName,
+        name: app.name,
         packageName: app.packageName,
         iconBytes: app.icon,
       );
@@ -26,6 +26,6 @@ class AppLocalDataSourceImpl implements AppLocalDataSource {
 
   @override
   Future<void> openApp(String packageName) async {
-    DeviceApps.openApp(packageName);
+    await InstalledApps.startApp(packageName);
   }
 }
